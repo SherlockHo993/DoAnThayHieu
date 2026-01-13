@@ -1,0 +1,56 @@
+﻿@model DoAnWeb.Models.khach_hang
+@{
+    ViewBag.Title = "Chi tiết khách hàng";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    var donHang = ViewBag.DonHang as List<DoAnWeb.Models.don_hang>;
+}
+
+<div class="row">
+    <div class="col-lg-4">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Thông tin khách hàng</h6>
+            </div>
+            <div class="card-body">
+                <p><strong>Họ tên:</strong> @Model.ho_ten</p>
+                <p><strong>SĐT:</strong> @Model.so_dien_thoai</p>
+                <p><strong>Địa chỉ:</strong> @Model.dia_chi</p>
+                <p><strong>Tài khoản:</strong> @(Model.tai_khoan?.ten_dang_nhap ?? "Không có")</p>
+                <p><strong>Số đơn hàng:</strong> @Model.don_hang.Count</p>
+                <p><strong>Tổng chi tiêu:</strong> @String.Format("{0:N0}", Model.don_hang.Sum(d => d.tong_tien)) VND</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-8">
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Lịch sử đơn hàng</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Mã đơn</th>
+                                <th>Ngày đặt</th>
+                                <th>Tổng tiền</th>
+                                <th>Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var dh in donHang)
+                            {
+                                <tr>
+                                    <td>#@dh.ma_don</td>
+                                    <td>@dh.ngay_dat?.ToString("dd/MM/yyyy HH:mm")</td>
+                                    <td>@String.Format("{0:N0}", dh.tong_tien) VND</td>
+                                    <td><span class="badge bg-warning">@dh.trang_thai</span></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

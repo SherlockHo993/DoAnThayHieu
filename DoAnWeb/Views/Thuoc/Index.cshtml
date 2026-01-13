@@ -1,0 +1,79 @@
+﻿@model List<DoAnWeb.Models.thuoc>
+@{ ViewBag.Title = "Sản phẩm";
+                Layout = "~/Views/Shared/_Layout.cshtml";
+
+                var categories = ViewBag.Categories as List<DoAnWeb.Models.loai_thuoc>; }
+
+<div class="container my-5">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index","Home")">Trang chủ</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Sản phẩm</li>
+        </ol>
+    </nav>
+
+    <div class="row g-4">
+        <!-- Sidebar Danh mục -->
+        <div class="col-lg-3">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Danh mục sản phẩm</h5>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a href="@Url.Action("Index","Thuoc")" class="list-group-item list-group-item-action @(ViewBag.maLoai == null ? "active" : "")">
+                        Tất cả sản phẩm
+                    </a>
+                    @foreach (var cat in categories)
+                    {
+        <a href="@Url.Action("Index","Thuoc", new { maLoai = cat.ma_loai })"
+           class="list-group-item list-group-item-action @(ViewBag.maLoai == cat.ma_loai ? "active" : "")">
+            @cat.ten_loai
+        </a>}
+                </div>
+            </div>
+        </div>
+
+        <!-- Grid Sản phẩm -->
+        <div class="col-lg-9">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="fw-bold" style="color: var(--primary);">@(ViewBag.maLoai != null ? categories.FirstOrDefault(c => c.ma_loai == ViewBag.maLoai)?.ten_loai : "Tất cả sản phẩm")</h2>
+                <select class="form-select w-auto">
+                    <option>Sắp xếp: Mới nhất</option>
+                    <option>Giá tăng dần</option>
+                    <option>Giá giảm dần</option>
+                </select>
+            </div>
+
+            <div class="product-grid">
+                @foreach (var item in Model)
+                {
+    <div class="product-card">
+        <img src="~/Content/Images/@item.hinh_anh"
+             onerror="this.src='https://via.placeholder.com/250x200?text=Thuốc'"
+             alt="@item.ten_thuoc" class="product-img">
+        <div class="product-body">
+            <h6 class="product-title">@item.ten_thuoc</h6>
+            <div class="price">@String.Format("{0:N0}", item.don_gia) ₫</div>
+            <a href="@Url.Action("Details","Thuoc", new { id = item.ma_thuoc })" class="btn btn-outline-primary btn-sm w-100 mb-2">
+                Xem chi tiết
+            </a>
+            <a href="@Url.Action("AddToCart","GioHang", new { id = item.ma_thuoc })" class="btn btn-primary btn-sm w-100">
+                <i class="fas fa-cart-plus me-1"></i>Thêm giỏ hàng
+            </a>
+        </div>
+    </div>}
+            </div>
+
+            <!-- Pagination -->
+            <nav class="mt-4">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item disabled"><a class="page-link">Trước</a></li>
+                    <li class="page-item active"><a class="page-link">1</a></li>
+                    <li class="page-item"><a class="page-link">2</a></li>
+                    <li class="page-item"><a class="page-link">Sau</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>

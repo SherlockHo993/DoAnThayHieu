@@ -1,0 +1,87 @@
+﻿@model IEnumerable<DoAnWeb.Models.thuoc>
+
+
+@{
+    ViewBag.Title = "Trang Chủ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Hero Banner -->
+<section class="hero">
+    <div class="container">
+        <h1 class="display-4 fw-bold">Nhà Thuốc Rubi - Chăm Sóc Sức Khỏe Gia Đình</h1>
+        <p class="lead">Hơn 10.000 sản phẩm chính hãng • Tư vấn dược sĩ miễn phí • Giao hàng tận nơi</p>
+        <div class="hero-actions">
+            <a href="@Url.Action("Index","Thuoc")" class="btn btn-primary btn-lg">
+                <i class="fas fa-search me-2"></i>Tìm kiếm sản phẩm
+            </a>
+            <a href="#" class="btn btn-success btn-lg">
+                <i class="fas fa-headset me-2"></i>Tư vấn ngay
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Categories -->
+<section class="categories">
+    <div class="container">
+        <h2 class="text-center fw-bold mb-4" style="color: var(--primary);">Danh Mục Nổi Bật</h2>
+        <div class="category-grid">
+            <div class="category-card">
+                <i class="fas fa-pills"></i>
+                <h5>Thuốc kê đơn</h5>
+            </div>
+            <div class="category-card">
+                <i class="fas fa-capsules"></i>
+                <h5>Thực phẩm chức năng</h5>
+            </div>
+            <div class="category-card">
+                <i class="fas fa-heart"></i>
+                <h5>Sức khỏe tim mạch</h5>
+            </div>
+            <div class="category-card">
+                <i class="fas fa-lungs"></i>
+                <h5>Hô hấp</h5>
+            </div>
+            <div class="category-card">
+                <i class="fas fa-child"></i>
+                <h5>Sản phẩm cho bé</h5>
+            </div>
+            <div class="category-card">
+                <i class="fas fa-user-md"></i>
+                <h5>Thiết bị y tế</h5>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Products Nổi Bật -->
+<section class="products-section">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="fw-bold" style="color: var(--primary);">Sản Phẩm Bán Chạy</h2>
+            <a href="@Url.Action("Index","Thuoc")" class="text-decoration-none" style="color: var(--accent);">Xem tất cả →</a>
+        </div>
+        <div class="product-grid">
+            @foreach (var item in Model.Take(8))
+            {
+<div class="product-card">
+    <img src="~/Content/Images/@item.hinh_anh" onerror="this.src='https://via.placeholder.com/250x200?text=Thuốc'" alt="@item.ten_thuoc" class="product-img">
+    <div class="product-body">
+        <h6 class="product-title">@item.ten_thuoc</h6>
+        <div class="price">@String.Format("{0:N0}", item.don_gia) ₫</div>
+        <a href="@Url.Action("AddToCart","GioHang", new { id = item.ma_thuoc })" class="btn btn-primary btn-sm w-100 mt-2">
+            <i class="fas fa-cart-plus me-1"></i>Thêm giỏ hàng
+        </a>
+    </div>
+</div>            }
+        </div>
+    </div>
+</section>
+
+<!-- Promo Banner (Tùy Chọn) -->
+<div class="bg-warning text-dark text-center py-3" style="background: linear-gradient(90deg, #fff3cd, #ffeaa7);">
+    <div class="container">
+        <p class="mb-0 fw-bold"><i class="fas fa-tag me-2"></i>Khuyến mãi: Giảm 20% tất cả vitamin C - Áp dụng đến 31/1!</p>
+    </div>
+</div>

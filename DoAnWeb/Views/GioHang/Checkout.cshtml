@@ -1,0 +1,185 @@
+﻿@model List<DoAnWeb.Models.CartItem>
+@{
+    ViewBag.Title = "Thanh toán";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    decimal tongTien = ViewBag.TongTien ?? Model.Sum(x => x.ThanhTien);
+    int tongSoLuong = ViewBag.TongSoLuong ?? Model.Sum(x => x.SoLuong);
+
+    string hoTen = ViewBag.HoTen as string ?? "";
+    string soDienThoai = ViewBag.SoDienThoai as string ?? "";
+    string diaChi = ViewBag.DiaChi as string ?? "";
+}
+
+<div class="container my-5">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index","Home")">Trang chủ</a></li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Index","GioHang")">Giỏ hàng</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Thanh toán</li>
+        </ol>
+    </nav>
+
+    <h2 class="fw-bold mb-4" style="color: var(--primary);">
+        <i class="fas fa-credit-card me-2"></i> Xác nhận thanh toán
+    </h2>
+
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show">
+            <i class="fas fa-exclamation-triangle me-2"></i>@ViewBag.Error
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- 1 FORM DUY NHẤT BAO QUANH TOÀN BỘ -->
+    <form method="post" action="@Url.Action("Checkout","GioHang")" id="checkoutForm">
+        @Html.AntiForgeryToken()
+
+        <div class="row g-5">
+            <!-- Thông tin giao hàng -->
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-map-marker-alt me-2"></i> Thông tin giao hàng
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label fw-medium">Họ và tên <span class="text-danger">*</span></label>
+                            <input type="text" name="ho_ten" class="form-control" value="@hoTen" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-medium">Số điện thoại <span class="text-danger">*</span></label>
+                            <input type="tel" name="so_dien_thoai" class="form-control" value="@soDienThoai" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-medium">Địa chỉ giao hàng <span class="text-danger">*</span></label>
+                            <textarea name="dia_chi" class="form-control" rows="3" required>@diaChi</textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Ghi chú (tùy chọn)</label>
+                            <textarea name="ghi_chu" class="form-control" rows="2"></textarea>
+                        </div>
+                        <div class="form-check mb-4">
+                            <input class="form-check-input" type="checkbox" id="agreeTerms" required>
+                            <label class="form-check-label" for="agreeTerms">
+                                Tôi đồng ý với <a href="#" class="text-primary">chính sách giao hàng</a> và <a href="#" class="text-primary">điều khoản dịch vụ</a> <span class="text-danger">*</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tóm tắt đơn hàng -->
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm sticky-top" style="top: 100px;">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-receipt me-2"></i> Tóm tắt đơn hàng
+                            <span class="badge bg-light text-dark fs-6 ms-2">@tongSoLuong sản phẩm</span>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive mb-4">
+                            <table class="table table-sm">
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td style="width: 60%;">
+                                                <div class="d-flex align-items-center">
+                                                    <img src="~/Content/Images/@item.HinhAnh"
+                                                         onerror="this.src='https://via.placeholder.com/50x50?text=@item.TenThuoc.Replace(" ", "+")'"
+                                                         class="rounded me-2 shadow-sm" width="50" height="50" style="object-fit: contain;">
+                                                    <div>
+                                                        <div class="fw-medium">@item.TenThuoc</div>
+                                                        <small class="text-muted">@item.SoLuong x @string.Format("{0:N0}", item.DonGia) ₫</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-end fw-bold text-success">@string.Format("{0:N0}", item.ThanhTien) ₫</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <hr class="my-3">
+
+                        <div class="d-flex justify-content-between py-2 mb-2">
+                            <span class="fw-medium">Tạm tính:</span>
+                            <span class="fw-medium">@string.Format("{0:N0}", tongTien) ₫</span>
+                        </div>
+                        <div class="d-flex justify-content-between py-2 mb-2">
+                            <span class="fw-medium">Phí vận chuyển:</span>
+                            <span class="text-success fw-medium">Miễn phí</span>
+                        </div>
+                        <hr class="my-3">
+
+                        <div class="d-flex justify-content-between align-items-center py-3 mb-4">
+                            <h5 class="mb-0 fw-bold">Tổng cộng:</h5>
+                            <h4 class="text-success mb-0 fw-bold">@string.Format("{0:N0}", tongTien) ₫</h4>
+                        </div>
+
+                        <!-- Nút submit nằm trong form chính -->
+                        <button type="submit" class="btn btn-success btn-lg w-100 shadow" id="btnCheckout">
+                            <i class="fas fa-credit-card me-2"></i>
+                            <span id="btnText">Xác nhận thanh toán</span>
+                            <span id="loadingSpinner" class="spinner-border spinner-border-sm ms-2 d-none" role="status"></span>
+                        </button>
+
+                        <div class="text-center mt-3">
+                            <small class="text-muted">
+                                <i class="fas fa-shield-alt text-success me-1"></i>
+                                <strong>Thanh toán an toàn</strong> • Giao hàng nhanh 2h nội thành
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form> <!-- Kết thúc form duy nhất -->
+</div>
+
+@section scripts {
+    <script>
+        const form = document.getElementById('checkoutForm');
+        const btnCheckout = document.getElementById('btnCheckout');
+        const btnText = document.getElementById('btnText');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+
+        form.addEventListener('submit', function (e) {
+            // Kiểm tra checkbox đồng ý
+            if (!document.getElementById('agreeTerms').checked) {
+                e.preventDefault();
+                alert('Vui lòng đồng ý với điều khoản dịch vụ và chính sách bảo mật!');
+                return;
+            }
+
+            // Kiểm tra các trường bắt buộc (dự phòng)
+            const requiredFields = form.querySelectorAll('[required]');
+            let allFilled = true;
+            requiredFields.forEach(field => {
+                if (field.type !== 'checkbox' && !field.value.trim()) {
+                    allFilled = false;
+                }
+            });
+
+            if (!allFilled) {
+                e.preventDefault();
+                alert('Vui lòng điền đầy đủ thông tin bắt buộc!');
+                return;
+            }
+
+            // Hiển thị loading và disable button
+            btnText.textContent = 'Đang xử lý...';
+            loadingSpinner.classList.remove('d-none');
+            btnCheckout.disabled = true;
+
+            // Không cần e.preventDefault() nữa → form tự submit
+        });
+    </script>
+}

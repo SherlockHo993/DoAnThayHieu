@@ -1,0 +1,64 @@
+﻿@model DoAnWeb.Models.thuoc
+@{ ViewBag.Title = Model.ten_thuoc;
+                Layout = "~/Views/Shared/_Layout.cshtml";
+
+                var related = ViewBag.RelatedProducts as List<DoAnWeb.Models.thuoc>; }
+
+<div class="container my-5">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index","Home")">Trang chủ</a></li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Index","Thuoc")">Sản phẩm</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.ten_thuoc</li>
+        </ol>
+    </nav>
+
+    <div class="row g-4">
+        <!-- Hình ảnh + Info -->
+        <div class="col-md-6">
+            <img src="~/Content/Images/@Model.hinh_anh"
+                 onerror="this.src='https://via.placeholder.com/500?text=@Model.ten_thuoc'"
+                 class="img-fluid rounded shadow-sm mb-4" alt="@Model.ten_thuoc">
+        </div>
+        <div class="col-md-6">
+            <h2 class="fw-bold mb-3" style="color: var(--primary);">@Model.ten_thuoc</h2>
+            <div class="price fs-3 fw-bold mb-3" style="color: var(--accent);">@String.Format("{0:N0}", Model.don_gia) ₫</div>
+            <p class="mb-4">@Model.mo_ta</p>
+
+            <!-- Số lượng + Thêm giỏ -->
+            <form method="post" action="@Url.Action("AddToCart","GioHang", new { id = Model.ma_thuoc })">
+                <div class="input-group mb-3 w-50">
+                    <span class="input-group-text">Số lượng</span>
+                    <input type="number" name="quantity" class="form-control" value="1" min="1" max="@Model.so_luong">
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg w-100">
+                    <i class="fas fa-cart-plus me-2"></i>Thêm vào giỏ hàng
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Sản phẩm liên quan -->
+    @if (related != null && related.Any())
+    {
+<section class="mt-5">
+    <h3 class="fw-bold mb-4" style="color: var(--primary);">Sản phẩm liên quan</h3>
+    <div class="product-grid">
+        @foreach (var item in related)
+        {
+<div class="product-card">
+    <img src="~/Content/Images/@item.hinh_anh"
+         onerror="this.src='https://via.placeholder.com/250x200?text=Thuốc'"
+         alt="@item.ten_thuoc" class="product-img">
+    <div class="product-body">
+        <h6 class="product-title">@item.ten_thuoc</h6>
+        <div class="price">@String.Format("{0:N0}", item.don_gia) ₫</div>
+        <a href="@Url.Action("AddToCart","GioHang", new { id = item.ma_thuoc })" class="btn btn-primary btn-sm w-100">
+            <i class="fas fa-cart-plus me-1"></i>Thêm giỏ hàng
+        </a>
+    </div>
+</div>                }
+    </div>
+</section>}
+</div>

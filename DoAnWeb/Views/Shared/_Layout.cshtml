@@ -1,0 +1,129 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Việt_Sherlock Pharma - Nhà Thuốc Uy Tín</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" />
+</head>
+<body>
+    <!-- Header/Navbar -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="@Url.Action("Index","Home")">
+                <i class="fas fa-heartbeat me-2"></i><strong>Việt_Sherlock</strong> PHARMA
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index","Home")"><i class="fas fa-home me-1"></i>Trang chủ</a></li>
+                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index","Thuoc")"><i class="fas fa-pills me-1"></i>Sản phẩm</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#"><i class="fas fa-tags me-1"></i>Khuyến mãi</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#"><i class="fas fa-headset me-1"></i>Tư vấn</a></li>
+                </ul>
+                <form class="d-flex search-bar mx-3">
+                    <input class="form-control me-2" type="search" placeholder="Tìm kiếm thuốc, sản phẩm..." aria-label="Search">
+                    <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
+                </form>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a href="@Url.Action("Index","GioHang")" class="nav-link cart-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                            @{ var cart = Session["GioHang"] as List<DoAnWeb.Models.CartItem>;
+                                var count = cart?.Sum(x => x.SoLuong) ?? 0; }
+                            @if (count > 0)
+                            {<span class="cart-badge">@count</span>}
+                        </a>
+                    </li>
+                    @if (Session["User"] == null)
+                    {
+        <li class="nav-item"><a class="nav-link" href="@Url.Action("Login","TaiKhoan")"><i class="fas fa-user me-1"></i>Đăng nhập</a></li>
+ }
+    else
+    {
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+        <i class="fas fa-user me-1"></i>@Session["UserName"]
+    </a>
+    <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="#">Đơn hàng</a></li>
+        <li><a class="dropdown-item" href="@Url.Action("Logout","TaiKhoan")">Đăng xuất</a></li>
+    </ul>
+</li>
+}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main style="padding-top: 80px;">
+        @RenderBody()
+    </main>
+
+    <!-- Trust Section -->
+    <section class="trust-section">
+        <div class="container">
+            <div class="trust-grid">
+                <div class="trust-item">
+                    <i class="fas fa-shield-alt"></i>
+                    <h6>Chính hãng 100%</h6>
+                    <p class="small text-muted">Cam kết nguồn gốc rõ ràng</p>
+                </div>
+                <div class="trust-item">
+                    <i class="fas fa-truck-fast"></i>
+                    <h6>Giao hàng 2h</h6>
+                    <p class="small text-muted">Nội thành miễn phí</p>
+                </div>
+                <div class="trust-item">
+                    <i class="fas fa-user-md"></i>
+                    <h6>Tư vấn miễn phí</h6>
+                    <p class="small text-muted">Dược sĩ 24/7</p>
+                </div>
+                <div class="trust-item">
+                    <i class="fas fa-certificate"></i>
+                    <h6>Chuẩn GPP</h6>
+                    <p class="small text-muted">Đạt chuẩn Bộ Y tế</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h6><strong>RUBI PHARMA</strong></h6>
+                    <p>Chuỗi nhà thuốc uy tín, đạt chuẩn GPP. Chăm sóc sức khỏe cộng đồng.</p>
+                </div>
+                <div class="col-md-4">
+                    <h6>Danh mục</h6>
+                    <ul>
+                        <li><a href="#">Thuốc kê đơn</a></li>
+                        <li><a href="#">Thực phẩm chức năng</a></li>
+                        <li><a href="#">Mỹ phẩm</a></li>
+                        <li><a href="#">Thiết bị y tế</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h6>Liên hệ</h6>
+                    <p><i class="fas fa-phone me-2"></i>1900 1234</p>
+                    <p><i class="fas fa-envelope me-2"></i>support@rubipharma.vn</p>
+                    <p><i class="fas fa-map-marker-alt me-2"></i>Hà Nội & TP.HCM</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                © @DateTime.Now.Year Việt_Sherlock Pharma. All rights reserved. | <a href="#" class="text-light">Chính sách bảo mật</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

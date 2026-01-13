@@ -1,0 +1,35 @@
+﻿@{ ViewBag.Title = "Đăng nhập";
+                Layout = "~/Views/Shared/_Layout.cshtml"; }
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Đăng nhập tài khoản</h5>
+                </div>
+                <div class="card-body p-4">
+                    @if (ViewBag.Error != null)
+                    {
+        <div class="alert alert-danger mb-4">@ViewBag.Error</div>}
+
+                    <form method="post" action="@Url.Action("Login","TaiKhoan")">
+                        <div class="mb-3">
+                            <label class="form-label">Tên đăng nhập</label>
+                            <input type="text" name="username" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Mật khẩu</label>
+                            <input type="password" name="password" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Đăng nhập</button>
+                    </form>
+
+                    <div class="text-center mt-3">
+                        <a href="@Url.Action("Register","TaiKhoan")" class="text-decoration-none">Chưa có tài khoản? Đăng ký ngay</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="3722440f40a34f2982b00a4c589f922a" Name="Diagram1">
+        <EntityTypeShape EntityType="nha_thuocModel.chi_tiet_don_hang" Width="1.5" PointX="7.25" PointY="1.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="nha_thuocModel.don_hang" Width="1.5" PointX="3" PointY="5.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="nha_thuocModel.khach_hang" Width="1.5" PointX="0.75" PointY="5.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="nha_thuocModel.loai_thuoc" Width="1.5" PointX="0.75" PointY="1.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="nha_thuocModel.tai_khoan" Width="1.5" PointX="6.25" PointY="7" IsExpanded="true" />
+        <EntityTypeShape EntityType="nha_thuocModel.thuoc" Width="1.5" PointX="3.5" PointY="0.875" IsExpanded="true" />
+        <AssociationConnector Association="nha_thuocModel.fk_ct_don" ManuallyRouted="false" />
+        <AssociationConnector Association="nha_thuocModel.fk_ct_thuoc" ManuallyRouted="false" />
+        <AssociationConnector Association="nha_thuocModel.fk_don_khach" ManuallyRouted="false" />
+        <AssociationConnector Association="nha_thuocModel.fk_khach_taikhoan" ManuallyRouted="false" />
+        <AssociationConnector Association="nha_thuocModel.fk_thuoc_loai" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

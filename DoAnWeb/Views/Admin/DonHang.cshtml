@@ -1,0 +1,35 @@
+﻿@{ ViewBag.Title = "Quản lý đơn hàng";
+                Layout = "~/Views/Shared/_LayoutAdmin.cshtml"; }
+
+<h3>Quản lý đơn hàng</h3>
+<form method="get">
+    <input type="text" name="search" class="form-control d-inline-block w-50" placeholder="Tìm mã đơn hoặc tên khách">
+    <button type="submit" class="btn btn-primary">Tìm</button>
+</form>
+
+<table class="table mt-3">
+    <thead>
+        <tr>
+            <th>Mã đơn</th>
+            <th>Khách hàng</th>
+            <th>Ngày đặt</th>
+            <th>Tổng tiền</th>
+            <th>Trạng thái</th>
+            <th>Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var dh in Model)
+        {
+<tr>
+    <td>@dh.ma_don</td>
+    <td>@dh.khach_hang.ho_ten</td>
+    <td>@dh.ngay_dat</td>
+    <td>@dh.tong_tien</td>
+    <td>@dh.trang_thai</td>
+    <td>
+        <a href="@Url.Action("ChiTietDonHang", new { id = dh.ma_don })">Chi tiết</a>
+    </td>
+</tr>}
+    </tbody>
+</table>

@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="nha_thuocModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="chi_tiet_don_hang">
+    <Key>
+      <PropertyRef Name="ma_ct" />
+    </Key>
+    <Property Name="ma_ct" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ma_don" Type="int" Nullable="false" />
+    <Property Name="ma_thuoc" Type="int" Nullable="false" />
+    <Property Name="so_luong" Type="int" Nullable="false" />
+    <Property Name="don_gia" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+  </EntityType>
+  <EntityType Name="don_hang">
+    <Key>
+      <PropertyRef Name="ma_don" />
+    </Key>
+    <Property Name="ma_don" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ma_khach" Type="int" Nullable="false" />
+    <Property Name="ngay_dat" Type="datetime" />
+    <Property Name="tong_tien" Type="decimal" Precision="18" Scale="2" />
+    <Property Name="trang_thai" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="khach_hang">
+    <Key>
+      <PropertyRef Name="ma_khach" />
+    </Key>
+    <Property Name="ma_khach" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ho_ten" Type="nvarchar" MaxLength="200" Nullable="false" />
+    <Property Name="so_dien_thoai" Type="nvarchar" MaxLength="15" />
+    <Property Name="dia_chi" Type="nvarchar" MaxLength="255" />
+    <Property Name="ma_tai_khoan" Type="int" />
+  </EntityType>
+  <EntityType Name="loai_thuoc">
+    <Key>
+      <PropertyRef Name="ma_loai" />
+    </Key>
+    <Property Name="ma_loai" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ten_loai" Type="nvarchar" MaxLength="200" Nullable="false" />
+  </EntityType>
+  <EntityType Name="tai_khoan">
+    <Key>
+      <PropertyRef Name="ma_tai_khoan" />
+    </Key>
+    <Property Name="ma_tai_khoan" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ten_dang_nhap" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="mat_khau" Type="nvarchar" MaxLength="255" Nullable="false" />
+    <Property Name="vai_tro" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="ngay_tao" Type="datetime" />
+  </EntityType>
+  <EntityType Name="thuoc">
+    <Key>
+      <PropertyRef Name="ma_thuoc" />
+    </Key>
+    <Property Name="ma_thuoc" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ten_thuoc" Type="nvarchar" MaxLength="255" Nullable="false" />
+    <Property Name="ma_loai" Type="int" Nullable="false" />
+    <Property Name="don_gia" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+    <Property Name="so_luong" Type="int" />
+    <Property Name="mo_ta" Type="nvarchar(max)" />
+    <Property Name="hinh_anh" Type="nvarchar" MaxLength="255" />
+  </EntityType>
+  <Association Name="fk_ct_don">
+    <End Role="don_hang" Type="Self.don_hang" Multiplicity="1" />
+    <End Role="chi_tiet_don_hang" Type="Self.chi_tiet_don_hang" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="don_hang">
+        <PropertyRef Name="ma_don" />
+      </Principal>
+      <Dependent Role="chi_tiet_don_hang">
+        <PropertyRef Name="ma_don" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="fk_ct_thuoc">
+    <End Role="thuoc" Type="Self.thuoc" Multiplicity="1" />
+    <End Role="chi_tiet_don_hang" Type="Self.chi_tiet_don_hang" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="thuoc">
+        <PropertyRef Name="ma_thuoc" />
+      </Principal>
+      <Dependent Role="chi_tiet_don_hang">
+        <PropertyRef Name="ma_thuoc" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="fk_don_khach">
+    <End Role="khach_hang" Type="Self.khach_hang" Multiplicity="1" />
+    <End Role="don_hang" Type="Self.don_hang" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="khach_hang">
+        <PropertyRef Name="ma_khach" />
+      </Principal>
+      <Dependent Role="don_hang">
+        <PropertyRef Name="ma_khach" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="fk_khach_taikhoan">
+    <End Role="tai_khoan" Type="Self.tai_khoan" Multiplicity="0..1" />
+    <End Role="khach_hang" Type="Self.khach_hang" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="tai_khoan">
+        <PropertyRef Name="ma_tai_khoan" />
+      </Principal>
+      <Dependent Role="khach_hang">
+        <PropertyRef Name="ma_tai_khoan" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="fk_thuoc_loai">
+    <End Role="loai_thuoc" Type="Self.loai_thuoc" Multiplicity="1" />
+    <End Role="thuoc" Type="Self.thuoc" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="loai_thuoc">
+        <PropertyRef Name="ma_loai" />
+      </Principal>
+      <Dependent Role="thuoc">
+        <PropertyRef Name="ma_loai" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="nha_thuocModelStoreContainer">
+    <EntitySet Name="chi_tiet_don_hang" EntityType="Self.chi_tiet_don_hang" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="don_hang" EntityType="Self.don_hang" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="khach_hang" EntityType="Self.khach_hang" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="loai_thuoc" EntityType="Self.loai_thuoc" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tai_khoan" EntityType="Self.tai_khoan" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="thuoc" EntityType="Self.thuoc" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="fk_ct_don" Association="Self.fk_ct_don">
+      <End Role="don_hang" EntitySet="don_hang" />
+      <End Role="chi_tiet_don_hang" EntitySet="chi_tiet_don_hang" />
+    </AssociationSet>
+    <AssociationSet Name="fk_ct_thuoc" Association="Self.fk_ct_thuoc">
+      <End Role="thuoc" EntitySet="thuoc" />
+      <End Role="chi_tiet_don_hang" EntitySet="chi_tiet_don_hang" />
+    </AssociationSet>
+    <AssociationSet Name="fk_don_khach" Association="Self.fk_don_khach">
+      <End Role="khach_hang" EntitySet="khach_hang" />
+      <End Role="don_hang" EntitySet="don_hang" />
+    </AssociationSet>
+    <AssociationSet Name="fk_khach_taikhoan" Association="Self.fk_khach_taikhoan">
+      <End Role="tai_khoan" EntitySet="tai_khoan" />
+      <End Role="khach_hang" EntitySet="khach_hang" />
+    </AssociationSet>
+    <AssociationSet Name="fk_thuoc_loai" Association="Self.fk_thuoc_loai">
+      <End Role="loai_thuoc" EntitySet="loai_thuoc" />
+      <End Role="thuoc" EntitySet="thuoc" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

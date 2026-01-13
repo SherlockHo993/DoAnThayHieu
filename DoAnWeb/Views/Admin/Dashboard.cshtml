@@ -1,0 +1,118 @@
+﻿@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="row mb-4">
+    
+</div>
+
+<!-- Biểu đồ doanh thu -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex justify-content-between align-items-center">
+        <h6 class="m-0 font-weight-bold text-primary">Doanh thu theo thời gian</h6>
+        <div class="btn-group btn-group-sm" role="group">
+            <button class="btn btn-outline-primary active" data-period="day">Ngày</button>
+            <button class="btn btn-outline-primary" data-period="month">Tháng</button>
+            <button class="btn btn-outline-primary" data-period="year">Năm</button>
+        </div>
+    </div>
+    <div class="card-body">
+        <canvas id="revenueChart" height="120"></canvas>
+    </div>
+</div>
+
+<!-- Top sản phẩm -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Top 10 sản phẩm bán chạy</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Số lượng bán</th>
+                    </tr>
+                </thead>
+                <tbody>
+                        @{ int stt = 1; }
+                        @foreach (var item in ViewBag.TopSanPham)
+                        {
+                            var typedItem = (dynamic)item;
+                    <tr>
+                        <td>@stt</td>
+                        <td>@typedItem.Ten</td>
+                        <td>@typedItem.SoLuong</td>
+                    </tr>stt++;
+                                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const revenueChart = new Chart(document.getElementById('revenueChart'), {
+            type: 'line',
+            data: {
+                labels: [], // Sẽ update
+                datasets: [{
+                    label: 'Doanh thu (₫)',
+                    data: [],
+                    borderColor: 'rgb(75, 192, 192)',
+                    tension: 0.1,
+                    fill: true,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)'
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        const dailyLabels = @Html.Raw(ViewBag.DailyLabels);
+        const dailyData = @Html.Raw(ViewBag.DailyData);
+        const monthlyLabels = @Html.Raw(ViewBag.MonthlyLabels);
+        const monthlyData = @Html.Raw(ViewBag.MonthlyData);
+        const yearlyLabels = @Html.Raw(ViewBag.YearlyLabels);
+        const yearlyData = @Html.Raw(ViewBag.YearlyData);
+
+        function updateChart(period) {
+            let labels = [];
+            let data = [];
+            if (period === 'day') {
+                labels = dailyLabels;
+                data = dailyData;
+            } else if (period === 'month') {
+                labels = monthlyLabels;
+                data = monthlyData;
+            } else if (period === 'year') {
+                labels = yearlyLabels;
+                data = yearlyData;
+            }
+            revenueChart.data.labels = labels;
+            revenueChart.data.datasets[0].data = data;
+            revenueChart.update();
+        }
+
+        // Load mặc định theo tháng
+        updateChart('month');
+
+        // Nút chuyển đổi
+        document.querySelectorAll('.btn-group button').forEach(button => {
+            button.addEventListener('click', () => {
+                document.querySelectorAll('.btn-group button').forEach(b => b.classList.remove('active'));
+                button.classList.add('active');
+                updateChart(button.getAttribute('data-period'));
+            });
+        });
+    </script>
+}

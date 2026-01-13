@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="nha_thuocModelStoreContainer" CdmEntityContainer="nha_thuocEntities">
+    <EntitySetMapping Name="chi_tiet_don_hang">
+      <EntityTypeMapping TypeName="nha_thuocModel.chi_tiet_don_hang">
+        <MappingFragment StoreEntitySet="chi_tiet_don_hang">
+          <ScalarProperty Name="ma_ct" ColumnName="ma_ct" />
+          <ScalarProperty Name="ma_don" ColumnName="ma_don" />
+          <ScalarProperty Name="ma_thuoc" ColumnName="ma_thuoc" />
+          <ScalarProperty Name="so_luong" ColumnName="so_luong" />
+          <ScalarProperty Name="don_gia" ColumnName="don_gia" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="don_hang">
+      <EntityTypeMapping TypeName="nha_thuocModel.don_hang">
+        <MappingFragment StoreEntitySet="don_hang">
+          <ScalarProperty Name="ma_don" ColumnName="ma_don" />
+          <ScalarProperty Name="ma_khach" ColumnName="ma_khach" />
+          <ScalarProperty Name="ngay_dat" ColumnName="ngay_dat" />
+          <ScalarProperty Name="tong_tien" ColumnName="tong_tien" />
+          <ScalarProperty Name="trang_thai" ColumnName="trang_thai" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="khach_hang">
+      <EntityTypeMapping TypeName="nha_thuocModel.khach_hang">
+        <MappingFragment StoreEntitySet="khach_hang">
+          <ScalarProperty Name="ma_khach" ColumnName="ma_khach" />
+          <ScalarProperty Name="ho_ten" ColumnName="ho_ten" />
+          <ScalarProperty Name="so_dien_thoai" ColumnName="so_dien_thoai" />
+          <ScalarProperty Name="dia_chi" ColumnName="dia_chi" />
+          <ScalarProperty Name="ma_tai_khoan" ColumnName="ma_tai_khoan" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="loai_thuoc">
+      <EntityTypeMapping TypeName="nha_thuocModel.loai_thuoc">
+        <MappingFragment StoreEntitySet="loai_thuoc">
+          <ScalarProperty Name="ma_loai" ColumnName="ma_loai" />
+          <ScalarProperty Name="ten_loai" ColumnName="ten_loai" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tai_khoan">
+      <EntityTypeMapping TypeName="nha_thuocModel.tai_khoan">
+        <MappingFragment StoreEntitySet="tai_khoan">
+          <ScalarProperty Name="ma_tai_khoan" ColumnName="ma_tai_khoan" />
+          <ScalarProperty Name="ten_dang_nhap" ColumnName="ten_dang_nhap" />
+          <ScalarProperty Name="mat_khau" ColumnName="mat_khau" />
+          <ScalarProperty Name="vai_tro" ColumnName="vai_tro" />
+          <ScalarProperty Name="ngay_tao" ColumnName="ngay_tao" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="thuocs">
+      <EntityTypeMapping TypeName="nha_thuocModel.thuoc">
+        <MappingFragment StoreEntitySet="thuoc">
+          <ScalarProperty Name="ma_thuoc" ColumnName="ma_thuoc" />
+          <ScalarProperty Name="ten_thuoc" ColumnName="ten_thuoc" />
+          <ScalarProperty Name="ma_loai" ColumnName="ma_loai" />
+          <ScalarProperty Name="don_gia" ColumnName="don_gia" />
+          <ScalarProperty Name="so_luong" ColumnName="so_luong" />
+          <ScalarProperty Name="mo_ta" ColumnName="mo_ta" />
+          <ScalarProperty Name="hinh_anh" ColumnName="hinh_anh" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

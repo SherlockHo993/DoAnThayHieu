@@ -1,0 +1,43 @@
+﻿@{
+    ViewBag.Title = "Quản lý sản phẩm";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex justify-content-between">
+        <h6 class="m-0 font-weight-bold text-primary">Danh sách sản phẩm</h6>
+        <a href="@Url.Action("ThemSanPham")" class="btn btn-success btn-sm">Thêm sản phẩm</a>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tên thuốc</th>
+                        <th>Giá</th>
+                        <th>Số lượng</th>
+                        <th>Loại</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var sp in Model)
+                    {
+                        <tr>
+                            <td>@sp.ma_thuoc</td>
+                            <td>@sp.ten_thuoc</td>
+                            <td>@String.Format("{0:N0}", sp.don_gia) VND</td>
+                            <td>@sp.so_luong</td>
+                            <td>@sp.loai_thuoc.ten_loai</td>
+                            <td>
+                                <a href="@Url.Action("SuaSanPham", new { id = sp.ma_thuoc })" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
+                                <a href="@Url.Action("XoaSanPham", new { id = sp.ma_thuoc })" class="btn btn-danger btn-sm" onclick="return confirm('Xóa sản phẩm này?')"><i class="fas fa-trash"></i></a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

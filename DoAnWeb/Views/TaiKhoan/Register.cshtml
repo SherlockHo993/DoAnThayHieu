@@ -1,0 +1,43 @@
+﻿@{ ViewBag.Title = "Đăng ký tài khoản";
+                Layout = "~/Views/Shared/_Layout.cshtml"; }
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Đăng ký tài khoản mới</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post" action="@Url.Action("Register","TaiKhoan")">
+                        <div class="mb-3">
+                            <label class="form-label">Họ tên</label>
+                            <input type="text" name="ho_ten" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Số điện thoại</label>
+                            <input type="tel" name="so_dien_thoai" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Tên đăng nhập</label>
+                            <input type="text" name="ten_dang_nhap" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Mật khẩu</label>
+                            <input type="password" name="mat_khau" class="form-control" required>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input type="checkbox" class="form-check-input" id="terms" required>
+                            <label class="form-check-label" for="terms">Tôi đồng ý với điều khoản dịch vụ</label>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100">Đăng ký</button>
+                    </form>
+
+                    <div class="text-center mt-3">
+                        <a href="@Url.Action("Login","TaiKhoan")" class="text-decoration-none">Đã có tài khoản? Đăng nhập</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
