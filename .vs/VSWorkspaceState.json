@@ -1,0 +1,12 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\DoAnWeb",
+    "\\DoAnWeb\\Models",
+    "\\DoAnWeb\\Views",
+    "\\DoAnWeb\\Views\\Admin",
+    "\\DoAnWeb\\Views\\Home"
+  ],
+  "SelectedNode": "\\DoAnWeb\\Views\\Home\\Index.cshtml",
+  "PreviewInSolutionExplorer": false
+}

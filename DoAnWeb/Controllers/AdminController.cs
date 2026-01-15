@@ -5,6 +5,8 @@ using System.Web.Mvc;
 using System.Data.Entity;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using System.Web;
+using System.IO;
 
 namespace DoAnWeb.Controllers
 {
@@ -370,6 +372,58 @@ ViewBag.YearlyData = JsonConvert.SerializeObject(yearlyData.Select(r => r.Tong))
             }
 
             return RedirectToAction("KhachHang");
+        }
+
+        // Trong AdminController.cs - Thêm action ThemSanPham
+
+        [HttpGet]
+        public ActionResult ThemSanPham()
+        {
+            var check = CheckLogin();
+            if (check != null) return check;
+
+            // Lấy danh sách loại thuốc để chọn ma_loai
+            ViewBag.LoaiThuocList = db.loai_thuoc.Select(l => new SelectListItem
+            {
+                Value = l.ma_loai.ToString(),
+                Text = l.ten_loai
+            }).ToList();
+
+            return View(new thuoc()); // Model rỗng
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ThemSanPham(thuoc model, HttpPostedFileBase hinh_anh)
+        {
+            var check = CheckLogin();
+            if (check != null) return check;
+
+            if (ModelState.IsValid)
+            {
+                // Xử lý upload hình ảnh
+                if (hinh_anh != null && hinh_anh.ContentLength > 0)
+                {
+                    var fileName = Path.GetFileName(hinh_anh.FileName);
+                    var path = Path.Combine(Server.MapPath("~/Content/Images/"), fileName);
+                    hinh_anh.SaveAs(path);
+                    model.hinh_anh = fileName; // Lưu tên file vào DB
+                }
+
+                db.thuocs.Add(model);
+                db.SaveChanges();
+                TempData["Success"] = "Thêm sản phẩm thành công!";
+                return RedirectToAction("SanPham");
+            }
+
+
+            ViewBag.LoaiThuocList = db.loai_thuoc.Select(l => new SelectListItem
+            {
+                Value = l.ma_loai.ToString(),
+                Text = l.ten_loai
+            }).ToList();
+
+            return View(model);
         }
     }
 }

@@ -1,8 +1,14 @@
 ﻿@model List<DoAnWeb.Models.thuoc>
-@{ ViewBag.Title = "Sản phẩm";
-                Layout = "~/Views/Shared/_Layout.cshtml";
+@{
+    ViewBag.Title = "Sản phẩm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 
-                var categories = ViewBag.Categories as List<DoAnWeb.Models.loai_thuoc>; }
+    var categories = ViewBag.Categories as List<DoAnWeb.Models.loai_thuoc>;
+    int currentPage = ViewBag.CurrentPage ?? 1;
+    int totalPages = ViewBag.TotalPages ?? 1;
+    int totalItems = ViewBag.TotalItems ?? 0;
+    int? maLoai = ViewBag.MaLoai;
+}
 
 <div class="container my-5">
     <!-- Breadcrumb -->
@@ -21,15 +27,17 @@
                     <h5 class="mb-0">Danh mục sản phẩm</h5>
                 </div>
                 <div class="list-group list-group-flush">
-                    <a href="@Url.Action("Index","Thuoc")" class="list-group-item list-group-item-action @(ViewBag.maLoai == null ? "active" : "")">
+                    <a href="@Url.Action("Index","Thuoc")"
+                       class="list-group-item list-group-item-action @(maLoai == null ? "active" : "")">
                         Tất cả sản phẩm
                     </a>
                     @foreach (var cat in categories)
                     {
-        <a href="@Url.Action("Index","Thuoc", new { maLoai = cat.ma_loai })"
-           class="list-group-item list-group-item-action @(ViewBag.maLoai == cat.ma_loai ? "active" : "")">
-            @cat.ten_loai
-        </a>}
+                        <a href="@Url.Action("Index","Thuoc", new { maLoai = cat.ma_loai })"
+                           class="list-group-item list-group-item-action @(maLoai == cat.ma_loai ? "active" : "")">
+                            @cat.ten_loai
+                        </a>
+                    }
                 </div>
             </div>
         </div>
@@ -37,7 +45,10 @@
         <!-- Grid Sản phẩm -->
         <div class="col-lg-9">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2 class="fw-bold" style="color: var(--primary);">@(ViewBag.maLoai != null ? categories.FirstOrDefault(c => c.ma_loai == ViewBag.maLoai)?.ten_loai : "Tất cả sản phẩm")</h2>
+                <h2 class="fw-bold" style="color: var(--primary);">
+                    @(maLoai != null ? categories.FirstOrDefault(c => c.ma_loai == maLoai)?.ten_loai ?? "Loại không xác định" : "Tất cả sản phẩm")
+                    <small class="text-muted ms-2">(@totalItems sản phẩm)</small>
+                </h2>
                 <select class="form-select w-auto">
                     <option>Sắp xếp: Mới nhất</option>
                     <option>Giá tăng dần</option>
@@ -45,35 +56,108 @@
                 </select>
             </div>
 
-            <div class="product-grid">
+            <div class="row g-4">
                 @foreach (var item in Model)
                 {
-    <div class="product-card">
-        <img src="~/Content/Images/@item.hinh_anh"
-             onerror="this.src='https://via.placeholder.com/250x200?text=Thuốc'"
-             alt="@item.ten_thuoc" class="product-img">
-        <div class="product-body">
-            <h6 class="product-title">@item.ten_thuoc</h6>
-            <div class="price">@String.Format("{0:N0}", item.don_gia) ₫</div>
-            <a href="@Url.Action("Details","Thuoc", new { id = item.ma_thuoc })" class="btn btn-outline-primary btn-sm w-100 mb-2">
-                Xem chi tiết
-            </a>
-            <a href="@Url.Action("AddToCart","GioHang", new { id = item.ma_thuoc })" class="btn btn-primary btn-sm w-100">
-                <i class="fas fa-cart-plus me-1"></i>Thêm giỏ hàng
-            </a>
-        </div>
-    </div>}
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card product-card h-100 shadow-sm border-0">
+                            <div class="card-img-top position-relative">
+                                <img src="~/Content/Images/@item.hinh_anh"
+                                     class="card-img-top img-fluid"
+                                     alt="@item.ten_thuoc"
+                                     onerror="this.src='https://via.placeholder.com/300x300?text=@item.ten_thuoc.Replace(" ", "+")'"
+                                     style="height: 220px; object-fit: contain; background:#f8f9fa;">
+                                <span class="badge bg-success position-absolute top-0 end-0 m-2">Mới</span>
+                            </div>
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title fw-bold text-truncate">@item.ten_thuoc</h5>
+                                <p class="card-text text-muted small">
+                                    Loại: @(item.loai_thuoc != null ? item.loai_thuoc.ten_loai : "Chưa phân loại")
+                                </p>
+                                <div class="mt-auto">
+                                    <div class="price fw-bold text-danger fs-5 mb-2">@string.Format("{0:N0}", item.don_gia) ₫</div>
+                                    <a href="@Url.Action("Details","Thuoc", new { id = item.ma_thuoc })"
+                                       class="btn btn-outline-primary w-100 mb-2">
+                                        Xem chi tiết
+                                    </a>
+                                    <a href="@Url.Action("AddToCart","GioHang", new { id = item.ma_thuoc })"
+                                       class="btn btn-primary w-100">
+                                        <i class="fas fa-cart-plus me-1"></i> Thêm vào giỏ
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
             </div>
 
-            <!-- Pagination -->
-            <nav class="mt-4">
-                <ul class="pagination justify-content-center">
-                    <li class="page-item disabled"><a class="page-link">Trước</a></li>
-                    <li class="page-item active"><a class="page-link">1</a></li>
-                    <li class="page-item"><a class="page-link">2</a></li>
-                    <li class="page-item"><a class="page-link">Sau</a></li>
-                </ul>
-            </nav>
+            @if (!Model.Any())
+            {
+                <div class="text-center py-5">
+                    <i class="fas fa-box-open fa-5x text-muted mb-3"></i>
+                    <h4 class="text-muted">Không tìm thấy sản phẩm nào</h4>
+                    <a href="@Url.Action("Index","Thuoc")" class="btn btn-outline-primary mt-3">Xem tất cả sản phẩm</a>
+                </div>
+            }
+
+            <!-- Phân trang Bootstrap -->
+            @if (totalPages > 1)
+            {
+                <nav aria-label="Phân trang sản phẩm" class="mt-5">
+                    <ul class="pagination justify-content-center">
+                        <!-- Trang trước -->
+                        <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                            <a class="page-link" href="@Url.Action("Index", new { maLoai = maLoai, page = currentPage - 1 })" aria-label="Previous">
+                                <span aria-hidden="true">«</span>
+                            </a>
+                        </li>
+
+                        <!-- Các trang số -->
+                        @{
+                            int startPage = Math.Max(1, currentPage - 2);
+                            int endPage = Math.Min(totalPages, currentPage + 2);
+                        }
+
+                        @if (startPage > 1)
+                        {
+                            <li class="page-item"><a class="page-link" href="@Url.Action("Index", new { maLoai = maLoai, page = 1 })">1</a></li>
+                            if (startPage > 2)
+                            {
+                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                            }
+                        }
+
+                        @for (int i = startPage; i <= endPage; i++)
+                        {
+                            <li class="page-item @(i == currentPage ? "active" : "")">
+                                <a class="page-link" href="@Url.Action("Index", new { maLoai = maLoai, page = i })">@i</a>
+                            </li>
+                        }
+
+                        @if (endPage < totalPages)
+                        {
+                            if (endPage < totalPages - 1)
+                            {
+                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                            }
+                            <li class="page-item">
+                                <a class="page-link" href="@Url.Action("Index", new { maLoai = maLoai, page = totalPages })">@totalPages</a>
+                            </li>
+                        }
+
+                        <!-- Trang sau -->
+                        <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                            <a class="page-link" href="@Url.Action("Index", new { maLoai = maLoai, page = currentPage + 1 })" aria-label="Next">
+                                <span aria-hidden="true">»</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+
+                <div class="text-center text-muted mt-3">
+                    Trang <strong>@currentPage</strong> / @totalPages (Tổng @totalItems sản phẩm)
+                </div>
+            }
         </div>
     </div>
 </div>

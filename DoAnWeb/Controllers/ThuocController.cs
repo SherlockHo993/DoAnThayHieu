@@ -12,15 +12,33 @@ namespace DoAnWeb.Controllers
         private nha_thuocEntities db = new nha_thuocEntities();
 
         // GET: Thuoc (Có thể lọc theo loại)
-        public ActionResult Index(int? maLoai)
+        public ActionResult Index(int? maLoai, int page = 1, int pageSize = 12)
         {
-            var products = db.thuocs.AsQueryable();
+            var products = db.thuocs
+                .Include("loai_thuoc") // Load luôn loại thuốc để tránh null
+                .AsQueryable();
+
             if (maLoai.HasValue)
             {
                 products = products.Where(p => p.ma_loai == maLoai.Value);
             }
-            ViewBag.Categories = db.loai_thuoc.ToList(); // Để render menu bên trái
-            return View(products.ToList());
+
+            int totalItems = products.Count();
+            int totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+
+            var pagedProducts = products
+                .OrderBy(p => p.ma_thuoc) // Hoặc OrderByDescending(p => p.ma_thuoc) nếu muốn mới nhất
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            ViewBag.Categories = db.loai_thuoc.ToList();
+            ViewBag.MaLoai = maLoai;
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = totalPages;
+            ViewBag.TotalItems = totalItems;
+
+            return View(pagedProducts);
         }
 
         // GET: Thuoc/Details/5
