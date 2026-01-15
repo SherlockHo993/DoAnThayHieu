@@ -1,0 +1,47 @@
+﻿@model DoAnWeb.Models.khach_hang
+@{
+    ViewBag.Title = "Thêm khách hàng mới";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex justify-content-between align-items-center">
+        <h5 class="m-0 font-weight-bold text-primary">Thêm khách hàng mới</h5>
+        <a href="@Url.Action("KhachHang","Admin")" class="btn btn-secondary btn-sm">
+            <i class="fas fa-arrow-left me-2"></i> Quay lại danh sách
+        </a>
+    </div>
+    <div class="card-body">
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger">@TempData["Error"]</div>
+        }
+
+        <form method="post">
+            @Html.AntiForgeryToken()
+            <div class="mb-3">
+                <label class="form-label fw-medium">Họ và tên <span class="text-danger">*</span></label>
+                @Html.TextBoxFor(m => m.ho_ten, new { @class = "form-control", required = "required" })
+                @Html.ValidationMessageFor(m => m.ho_ten, "", new { @class = "text-danger" })
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-medium">Số điện thoại <span class="text-danger">*</span></label>
+                @Html.TextBoxFor(m => m.so_dien_thoai, new { @class = "form-control", type = "tel", required = "required" })
+                @Html.ValidationMessageFor(m => m.so_dien_thoai, "", new { @class = "text-danger" })
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-medium">Địa chỉ</label>
+                @Html.TextAreaFor(m => m.dia_chi, new { @class = "form-control", rows = "3" })
+                @Html.ValidationMessageFor(m => m.dia_chi, "", new { @class = "text-danger" })
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-medium">Tài khoản liên kết (tùy chọn)</label>
+                @Html.DropDownListFor(m => m.ma_tai_khoan, (IEnumerable<SelectListItem>)ViewBag.TaiKhoanList, "-- Chọn tài khoản --", new { @class = "form-select" })
+                @Html.ValidationMessageFor(m => m.ma_tai_khoan, "", new { @class = "text-danger" })
+            </div>
+            <button type="submit" class="btn btn-success">
+                <i class="fas fa-save me-2"></i> Lưu khách hàng
+            </button>
+        </form>
+    </div>
+</div>

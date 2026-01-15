@@ -2,7 +2,7 @@
 using System;
 using System.Linq;
 using System.Web.Mvc;
-using System.Data.Entity; // Để dùng Include
+using System.Data.Entity;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
@@ -62,18 +62,22 @@ namespace DoAnWeb.Controllers
             ViewBag.TongKhachHang = db.khach_hang.Count();
 
             // Top sản phẩm bán chạy 
-            var top = db.chi_tiet_don_hang
+            var topList = db.chi_tiet_don_hang
                 .GroupBy(ct => ct.ma_thuoc)
-                .Select(g => new { MaThuoc = g.Key, SoLuong = g.Sum(ct => ct.so_luong) })
+                .Select(g => new
+                {
+                    MaThuoc = g.Key,
+                    SoLuong = g.Sum(ct => ct.so_luong)
+                })
                 .OrderByDescending(g => g.SoLuong)
                 .Take(10)
+                .ToList()
+                .Select(item => new TopSanPhamViewModel
+                {
+                    Ten = db.thuocs.FirstOrDefault(t => t.ma_thuoc == item.MaThuoc)?.ten_thuoc ?? "Không xác định",
+                    SoLuong = item.SoLuong
+                })
                 .ToList();
-
-            var topList = top.Select(g => new
-            {
-                Ten = db.thuocs.FirstOrDefault(t => t.ma_thuoc == g.MaThuoc)?.ten_thuoc ?? "Không xác định",
-                SoLuong = g.SoLuong
-            }).ToList();
 
             ViewBag.TopSanPham = topList;
 
@@ -229,6 +233,143 @@ ViewBag.YearlyData = JsonConvert.SerializeObject(yearlyData.Select(r => r.Tong))
             }
             ViewBag.Search = search;
             return View(sp.OrderByDescending(s => s.ma_thuoc).ToList());
+        }
+
+        // GET: Hiển thị form thêm khách hàng
+        [HttpGet]
+        public ActionResult ThemKhachHang()
+        {
+            var check = CheckLogin();
+            if (check != null) return check;
+
+            // Lấy danh sách tài khoản để chọn ma_tai_khoan (tùy chọn)
+            ViewBag.TaiKhoanList = db.tai_khoan.Select(t => new SelectListItem
+            {
+                Value = t.ma_tai_khoan.ToString(),
+                Text = t.ten_dang_nhap
+            }).ToList();
+
+            return View(new khach_hang()); // Truyền model rỗng
+        }
+
+        // POST: Lưu khách hàng mới vào DB
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ThemKhachHang(khach_hang model)
+        {
+            var check = CheckLogin();
+            if (check != null) return check;
+
+            if (ModelState.IsValid)
+            {
+                db.khach_hang.Add(model);
+                db.SaveChanges();
+                TempData["Success"] = "Thêm khách hàng thành công!";
+                return RedirectToAction("KhachHang");
+            }
+
+            ViewBag.TaiKhoanList = db.tai_khoan.Select(t => new SelectListItem
+            {
+                Value = t.ma_tai_khoan.ToString(),
+                Text = t.ten_dang_nhap
+            }).ToList();
+
+            return View(model);
+        }
+
+        // GET: Hiển thị form sửa khách hàng
+        [HttpGet]
+        public ActionResult SuaKhachHang(int id)
+        {
+            var check = CheckLogin();
+            if (check != null) return check;
+
+            var khach = db.khach_hang.Find(id);
+            if (khach == null)
+            {
+                TempData["Error"] = "Không tìm thấy khách hàng!";
+                return RedirectToAction("KhachHang");
+            }
+
+            // Lấy danh sách tài khoản để chọn (nếu cần)
+            ViewBag.TaiKhoanList = db.tai_khoan.Select(t => new SelectListItem
+            {
+                Value = t.ma_tai_khoan.ToString(),
+                Text = t.ten_dang_nhap,
+                Selected = t.ma_tai_khoan == khach.ma_tai_khoan
+            }).ToList();
+
+            return View(khach);
+        }
+
+        // POST: Lưu thông tin khách hàng đã sửa
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult SuaKhachHang(khach_hang model)
+        {
+            var check = CheckLogin();
+            if (check != null) return check;
+
+            if (ModelState.IsValid)
+            {
+                var khach = db.khach_hang.Find(model.ma_khach);
+                if (khach == null)
+                {
+                    TempData["Error"] = "Không tìm thấy khách hàng!";
+                    return RedirectToAction("KhachHang");
+                }
+
+                // Cập nhật thông tin
+                khach.ho_ten = model.ho_ten;
+                khach.so_dien_thoai = model.so_dien_thoai;
+                khach.dia_chi = model.dia_chi;
+                khach.ma_tai_khoan = model.ma_tai_khoan;
+
+                db.Entry(khach).State = EntityState.Modified;
+                db.SaveChanges();
+
+                TempData["Success"] = "Cập nhật khách hàng thành công!";
+                return RedirectToAction("KhachHang");
+            }
+
+            // Nếu lỗi → trả form với dữ liệu cũ
+            ViewBag.TaiKhoanList = db.tai_khoan.Select(t => new SelectListItem
+            {
+                Value = t.ma_tai_khoan.ToString(),
+                Text = t.ten_dang_nhap,
+                Selected = t.ma_tai_khoan == model.ma_tai_khoan
+            }).ToList();
+
+            return View(model);
+        }
+
+        // GET: Xóa khách hàng
+        [HttpGet]
+        public ActionResult XoaKhachHang(int id)
+        {
+            var check = CheckLogin();
+            if (check != null) return check;
+
+            var khach = db.khach_hang.Find(id);
+            if (khach != null)
+            {
+                if (khach.don_hang.Any())
+                {
+                    TempData["Error"] = "Khách hàng này có đơn hàng, không thể xóa!";
+                }
+                else
+                {
+                    db.khach_hang.Remove(khach);
+                    db.SaveChanges();
+                    TempData["Success"] = "Xóa khách hàng thành công!";
+                }
+            }
+            else
+            {
+                TempData["Error"] = "Không tìm thấy khách hàng!";
+            }
+
+            return RedirectToAction("KhachHang");
         }
     }
 }

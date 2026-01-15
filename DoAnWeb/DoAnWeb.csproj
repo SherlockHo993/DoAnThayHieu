@@ -267,6 +267,7 @@
     <Compile Include="Models\thuoc.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\TopSanPhamViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -296,6 +297,8 @@
     <Content Include="Views\Admin\ChiTietDonHang.cshtml" />
     <Content Include="Views\Admin\SanPham.cshtml" />
     <Content Include="Views\GioHang\Checkout.cshtml" />
+    <Content Include="Views\Admin\ThemKhachHang.cshtml" />
+    <Content Include="Views\Admin\SuaKhachHang.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

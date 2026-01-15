@@ -4,7 +4,23 @@
 }
 
 <div class="row mb-4">
-    
+    <!-- Cards thống kê (giữ nguyên) -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Tổng đơn hàng</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.TongDonHang</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-shopping-cart fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Các card khác tương tự -->
 </div>
 
 <!-- Biểu đồ doanh thu -->
@@ -38,16 +54,22 @@
                     </tr>
                 </thead>
                 <tbody>
-                        @{ int stt = 1; }
-                        @foreach (var item in ViewBag.TopSanPham)
-                        {
-                            var typedItem = (dynamic)item;
-                    <tr>
-                        <td>@stt</td>
-                        <td>@typedItem.Ten</td>
-                        <td>@typedItem.SoLuong</td>
-                    </tr>stt++;
-                                }
+                    @{ int stt = 1; }
+                    @foreach (var item in ViewBag.TopSanPham as List<DoAnWeb.Models.TopSanPhamViewModel>)
+                    {
+                        <tr>
+                            <td>@stt</td>
+                            <td>@item.Ten</td>
+                            <td>@item.SoLuong</td>
+                        </tr>
+                        stt++;
+                    }
+                    @if ((ViewBag.TopSanPham as List<DoAnWeb.Models.TopSanPhamViewModel>)?.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="3" class="text-center">Chưa có dữ liệu</td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         </div>
@@ -60,7 +82,7 @@
         const revenueChart = new Chart(document.getElementById('revenueChart'), {
             type: 'line',
             data: {
-                labels: [], // Sẽ update
+                labels: [],
                 datasets: [{
                     label: 'Doanh thu (₫)',
                     data: [],
