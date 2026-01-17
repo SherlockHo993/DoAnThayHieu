@@ -44,7 +44,7 @@ namespace DoAnWeb.Controllers
             return RedirectToAction("Login");
         }
 
-        // Kiểm tra đăng nhập (dùng cho mọi action)
+        // Kiểm tra đăng nhập 
         private ActionResult CheckLogin()
         {
             if (Session["Admin"] == null)
@@ -55,14 +55,27 @@ namespace DoAnWeb.Controllers
         // Dashboard
         public ActionResult Dashboard()
         {
-            var check = CheckLogin();
-            if (check != null) return check;
+            //var check = CheckLogin();
+            //if (check != null) return check;
 
             ViewBag.TongDonHang = db.don_hang.Count();
             ViewBag.DonChoXuly = db.don_hang.Count(x => x.trang_thai == "Đang xử lý");
             ViewBag.DoanhThu = db.don_hang.Sum(x => (decimal?)x.tong_tien) ?? 0;
             ViewBag.TongKhachHang = db.khach_hang.Count();
+            // Thêm: Doanh thu hôm nay
+            var todayStart = DateTime.Today;
+            var todayEnd = todayStart.AddDays(1);
+            ViewBag.DoanhThuHomNay = db.don_hang.Where(d => d.ngay_dat >= todayStart && d.ngay_dat < todayEnd).Sum(d => (decimal?)d.tong_tien) ?? 0;
 
+            // Thêm: Đơn hàng mới hôm nay
+            ViewBag.DonHangHomNay = db.don_hang.Count(d => d.ngay_dat >= todayStart && d.ngay_dat < todayEnd);
+
+            // Thêm: Sản phẩm tồn kho thấp (dưới 10)
+            ViewBag.TonKhoThap = db.thuocs.Count(t => t.so_luong < 10);
+
+            // Thêm: Khách hàng mới tuần này
+            var weekAgo = DateTime.Today.AddDays(-7);
+            ViewBag.KhachHangMoi = db.khach_hang.Count(k => k.ma_tai_khoan.HasValue && db.tai_khoan.FirstOrDefault(t => t.ma_tai_khoan == k.ma_tai_khoan).ngay_tao >= weekAgo);
             // Top sản phẩm bán chạy 
             var topList = db.chi_tiet_don_hang
                 .GroupBy(ct => ct.ma_thuoc)
@@ -124,6 +137,7 @@ var yearlyData = db.don_hang
 
 ViewBag.YearlyLabels = JsonConvert.SerializeObject(yearlyData.Select(r => r.Nam.ToString()));
 ViewBag.YearlyData = JsonConvert.SerializeObject(yearlyData.Select(r => r.Tong));
+
             return View();
         }
 

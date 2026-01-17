@@ -267,6 +267,7 @@
     <Compile Include="Models\thuoc.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\TopKhachHangViewModel.cs" />
     <Compile Include="Models\TopSanPhamViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -17,13 +17,13 @@ namespace DoAnWeb.Controllers
         [HttpPost]
         public ActionResult Login(string username, string password)
         {
-            // Lưu ý: Thực tế nên mã hóa password (MD5/BCrypt)
+
             var user = db.tai_khoan.FirstOrDefault(u => u.ten_dang_nhap == username && u.mat_khau == password);
             if (user != null)
             {
                 Session["User"] = user;
                 Session["UserName"] = user.ten_dang_nhap;
-                return RedirectToAction("Login", "Admin");
+                return RedirectToAction("Dashboard", "Admin");
             }
             ViewBag.Error = "Sai tên đăng nhập hoặc mật khẩu";
             return View();

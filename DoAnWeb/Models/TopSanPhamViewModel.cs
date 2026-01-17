@@ -9,5 +9,6 @@ namespace DoAnWeb.Models
     {
         public string Ten { get; set; }
         public int SoLuong { get; set; }
+        public decimal DoanhThu { get; set; }
     }
 }
